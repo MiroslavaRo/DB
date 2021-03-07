@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace task02.Models
+namespace task_03.Models
 {
     public class Genre
     {

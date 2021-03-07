@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using task02.Models;
+using task_03.Models;
 
-namespace task02.Migrations
+namespace task_03.Migrations
 {
-    [DbContext(typeof(BookShopDB))]
-    [Migration("20210220113143_ChangeBookYearToDateTime")]
-    partial class ChangeBookYearToDateTime
+    [DbContext(typeof(BookStoreDB))]
+    [Migration("20210307183846_BookGenreMapping")]
+    partial class BookGenreMapping
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace task02.Migrations
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("task02.Models.Author", b =>
+            modelBuilder.Entity("task_03.Models.Author", b =>
                 {
                     b.Property<int>("AuthorID")
                         .ValueGeneratedOnAdd()
@@ -36,21 +36,21 @@ namespace task02.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("task02.Models.Book", b =>
+            modelBuilder.Entity("task_03.Models.Book", b =>
                 {
                     b.Property<int>("BookID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AuthorID")
+                    b.Property<int?>("AuthorID")
                         .HasColumnType("int");
 
                     b.Property<string>("BookName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("BookYear")
-                        .HasColumnType("datetime");
+                    b.Property<int?>("BookYear")
+                        .HasColumnType("int");
 
                     b.HasKey("BookID");
 
@@ -59,23 +59,17 @@ namespace task02.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("task02.Models.BookGenreMap", b =>
+            modelBuilder.Entity("task_03.Models.BookGenreMap", b =>
                 {
                     b.Property<int>("BookGenreMapID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Book")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("BookID")
+                    b.Property<int?>("BookID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Genre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("GenreID")
+                    b.Property<int?>("GenreID")
                         .HasColumnType("int");
 
                     b.HasKey("BookGenreMapID");
@@ -87,7 +81,7 @@ namespace task02.Migrations
                     b.ToTable("BookGenreMaps");
                 });
 
-            modelBuilder.Entity("task02.Models.Genre", b =>
+            modelBuilder.Entity("task_03.Models.Genre", b =>
                 {
                     b.Property<int>("GenreID")
                         .ValueGeneratedOnAdd()
@@ -99,46 +93,38 @@ namespace task02.Migrations
 
                     b.HasKey("GenreID");
 
-                    b.ToTable("Generes");
+                    b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("task02.Models.Book", b =>
+            modelBuilder.Entity("task_03.Models.Book", b =>
                 {
-                    b.HasOne("task02.Models.Author", "Author")
+                    b.HasOne("task_03.Models.Author", null)
                         .WithMany("Books")
-                        .HasForeignKey("AuthorID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
+                        .HasForeignKey("AuthorID");
                 });
 
-            modelBuilder.Entity("task02.Models.BookGenreMap", b =>
+            modelBuilder.Entity("task_03.Models.BookGenreMap", b =>
                 {
-                    b.HasOne("task02.Models.Book", null)
+                    b.HasOne("task_03.Models.Book", null)
                         .WithMany("BookGenreMaps")
-                        .HasForeignKey("BookID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BookID");
 
-                    b.HasOne("task02.Models.Genre", null)
+                    b.HasOne("task_03.Models.Genre", null)
                         .WithMany("BookGenreMaps")
-                        .HasForeignKey("GenreID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GenreID");
                 });
 
-            modelBuilder.Entity("task02.Models.Author", b =>
+            modelBuilder.Entity("task_03.Models.Author", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("task02.Models.Book", b =>
+            modelBuilder.Entity("task_03.Models.Book", b =>
                 {
                     b.Navigation("BookGenreMaps");
                 });
 
-            modelBuilder.Entity("task02.Models.Genre", b =>
+            modelBuilder.Entity("task_03.Models.Genre", b =>
                 {
                     b.Navigation("BookGenreMaps");
                 });

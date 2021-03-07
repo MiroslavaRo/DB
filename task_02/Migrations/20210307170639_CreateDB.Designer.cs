@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using task02.Models;
+using task_02.Models;
 
-namespace task02.Migrations
+namespace task_02.Migrations
 {
     [DbContext(typeof(BookShopDB))]
-    [Migration("20210220125231_FirstGenre")]
-    partial class FirstGenre
+    [Migration("20210307170639_CreateDB")]
+    partial class CreateDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,7 +20,7 @@ namespace task02.Migrations
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("task02.Models.Author", b =>
+            modelBuilder.Entity("task_02.Models.Author", b =>
                 {
                     b.Property<int>("AuthorID")
                         .ValueGeneratedOnAdd()
@@ -42,7 +42,55 @@ namespace task02.Migrations
                         });
                 });
 
-            modelBuilder.Entity("task02.Models.Book", b =>
+            modelBuilder.Entity("task_02.Models.AuthorBookGenreMap", b =>
+                {
+                    b.Property<int>("AuthorBookGenreMapID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AuthorID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BookID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GenreID")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuthorBookGenreMapID");
+
+                    b.HasIndex("BookID");
+
+                    b.HasIndex("GenreID");
+
+                    b.ToTable("AuthorBookGenreMaps");
+
+                    b.HasData(
+                        new
+                        {
+                            AuthorBookGenreMapID = 1,
+                            AuthorID = 1,
+                            BookID = 2,
+                            GenreID = 1
+                        },
+                        new
+                        {
+                            AuthorBookGenreMapID = 2,
+                            AuthorID = 1,
+                            BookID = 2,
+                            GenreID = 2
+                        },
+                        new
+                        {
+                            AuthorBookGenreMapID = 3,
+                            AuthorID = 1,
+                            BookID = 2,
+                            GenreID = 3
+                        });
+                });
+
+            modelBuilder.Entity("task_02.Models.Book", b =>
                 {
                     b.Property<int>("BookID")
                         .ValueGeneratedOnAdd()
@@ -56,7 +104,6 @@ namespace task02.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("BookYear")
-                        .HasMaxLength(4)
                         .HasColumnType("int");
 
                     b.HasKey("BookID");
@@ -70,48 +117,19 @@ namespace task02.Migrations
                         {
                             BookID = 1,
                             AuthorID = 1,
-                            BookName = "The Last Wish",
+                            BookName = "Witcher:The Last Wish",
                             BookYear = 1993
-                        });
-                });
-
-            modelBuilder.Entity("task02.Models.BookGenreMap", b =>
-                {
-                    b.Property<int>("BookGenreMapID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Book")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("BookID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Genre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("GenreID")
-                        .HasColumnType("int");
-
-                    b.HasKey("BookGenreMapID");
-
-                    b.HasIndex("BookID");
-
-                    b.HasIndex("GenreID");
-
-                    b.ToTable("BookGenreMaps");
-
-                    b.HasData(
+                        },
                         new
                         {
-                            BookGenreMapID = 1,
-                            BookID = 1,
-                            GenreID = 1
+                            BookID = 2,
+                            AuthorID = 1,
+                            BookName = "The Snake",
+                            BookYear = 2009
                         });
                 });
 
-            modelBuilder.Entity("task02.Models.Genre", b =>
+            modelBuilder.Entity("task_02.Models.Genre", b =>
                 {
                     b.Property<int>("GenreID")
                         .ValueGeneratedOnAdd()
@@ -123,53 +141,61 @@ namespace task02.Migrations
 
                     b.HasKey("GenreID");
 
-                    b.ToTable("Generes");
+                    b.ToTable("Geners");
 
                     b.HasData(
                         new
                         {
                             GenreID = 1,
                             GenreName = "fantasy"
+                        },
+                        new
+                        {
+                            GenreID = 2,
+                            GenreName = "war film"
+                        },
+                        new
+                        {
+                            GenreID = 3,
+                            GenreName = "drama"
                         });
                 });
 
-            modelBuilder.Entity("task02.Models.Book", b =>
+            modelBuilder.Entity("task_02.Models.AuthorBookGenreMap", b =>
                 {
-                    b.HasOne("task02.Models.Author", "Author")
-                        .WithMany("Books")
-                        .HasForeignKey("AuthorID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("task02.Models.BookGenreMap", b =>
-                {
-                    b.HasOne("task02.Models.Book", null)
+                    b.HasOne("task_02.Models.Book", null)
                         .WithMany("BookGenreMaps")
                         .HasForeignKey("BookID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("task02.Models.Genre", null)
+                    b.HasOne("task_02.Models.Genre", null)
                         .WithMany("BookGenreMaps")
                         .HasForeignKey("GenreID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("task02.Models.Author", b =>
+            modelBuilder.Entity("task_02.Models.Book", b =>
+                {
+                    b.HasOne("task_02.Models.Author", null)
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("task_02.Models.Author", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("task02.Models.Book", b =>
+            modelBuilder.Entity("task_02.Models.Book", b =>
                 {
                     b.Navigation("BookGenreMaps");
                 });
 
-            modelBuilder.Entity("task02.Models.Genre", b =>
+            modelBuilder.Entity("task_02.Models.Genre", b =>
                 {
                     b.Navigation("BookGenreMaps");
                 });
